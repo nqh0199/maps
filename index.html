@@ -498,7 +498,7 @@ function emojiFor(type,mod,rd){
   if(/roundabout|rotary/.test(type||'')){
     return '@'+(k==='uturn'?'↩️':/right/.test(k)?'➡️':/left/.test(k)?'⬅️':'⬆️');
   }
-  return {'uturn':'↩️','right':'➡️','left':'⬅️','slight right':'➡️','slight left':'⬅️','sharp right':'➡️','sharp left':'⬅️'}[mod]||'⬆️';
+  return {'uturn':'↩️','right':'➡️','left':'⬅️','slight right':'↗️','slight left':'↖️','sharp right':'➡️','sharp left':'⬅️'}[mod]||'⬆️';
 }
 function wordFor(type,mod,rd){
   if(type==='arrive')return 'ĐẾN NƠI';
@@ -825,12 +825,14 @@ const ARROWS={
   '\u27a1':[' '.repeat(5)+'|╲','|▔▔'+' '.repeat(3)+'╲','|'+' '.repeat(8)+'╱','▔▔|╱'].join('\n'),      /* PHẢI */
   '\u2b05':[' '.repeat(3)+'╱|','╱'+' '.repeat(3)+'▔▔▔','╲'+' '.repeat(8)+'',' '.repeat(3)+'╲|▔▔▔'].join('\n'),  /* TRÁI */
   '\u2b06':[' '.repeat(3)+'╱╲','╱'+' '.repeat(6)+'╲','▔|'+' '.repeat(5)+'|▔',' '.repeat(2)+'|_____|'].join('\n'),    /* THẲNG */
-  '\u21a9':['  _______',' |   ___   |','_|  |_   |__|','╲╱'].join('\n')    /* QUAY ĐẦU */
+  '\u21a9':['   _______','  |    ___    |','_|   |_    |   |','╲╱     |   |'].join('\n'),    /* QUAY ĐẦU */
+  '\u2197':['   ╱\\','  /  /',' /  /','/  /','▔'].join('\n'),    /* CHẾCH PHẢI */
+  '\u2196':['/╲',' \\  \\','  \\  \\','   \\  \\','    ▔'].join('\n')    /* CHẾCH TRÁI */
 };
 async function sendTelegram(token,chat,m){
   /* Mũi tên phải/trái/thẳng: thay emoji bằng hình mũi tên ký tự (monospace trong <pre>) */
   let title=m.title,art='';
-  const am=/[\u27a1\u2b05\u2b06\u21a9]\ufe0f?/.exec(title);
+  const am=/[\u27a1\u2b05\u2b06\u21a9\u2197\u2196]\ufe0f?/.exec(title);
   if(am){art=ARROWS[am[0][0]];title=title.replace(am[0],'').replace(/\s+/g,' ').trim();}
   const text='<b>'+esc(title)+'</b>\n'+(art?'<pre>'+esc(art)+'</pre>\n':'')+esc(m.message);
   const r=await fetch('https://api.telegram.org/bot'+encodeURIComponent(token)+'/sendMessage',{
